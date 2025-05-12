@@ -1,0 +1,29 @@
+.common-inputs-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px; /* Adjust the gap between fields as needed */
+  }
+  
+  .column {
+    flex: 1; /* Adjust the width of columns */
+    min-width: 200px; /* Minimum width of each column */
+  }
+
+  .button-gap {
+    margin-right: 10px;
+  }
+  .button-container {
+    float: right;
+    margin-bottom: 30px;
+  }
+  .button-right {
+    width: 150px;
+    float: right;
+    margin-left: 10px;
+  }

@@ -1,0 +1,78 @@
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="logo-container">
+          <svg width="400" height="150" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Gradient for the main text -->
+                <linearGradient id="textGradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                    <stop offset="0%" style="stop-color:rgb(74,144,226); stop-opacity:1" />
+                    <stop offset="64%" style="stop-color:rgb(164,78,182); stop-opacity:1" />
+                </linearGradient>
+        
+                <!-- Glow Effect for Line -->
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="blurred" />
+                    <feMerge>
+                        <feMergeNode in="blurred" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+        
+            <!-- Main Text -->
+            <text x="50%" y="40%" font-size="48" font-weight="bold" font-family="Arial, sans-serif"
+                  fill="url(#textGradient)" text-anchor="middle" dominant-baseline="middle">
+                Keshav Rathi
+            </text>
+        
+            <!-- Decorative Centered Line with Glow Effect -->
+            <line x1="100" y1="75" x2="300" y2="75" stroke="purple" stroke-width="4" stroke-linecap="round" filter="url(#glow)" />
+        
+            <!-- Association Text Below Line -->
+            <text x="50%" y="90%" font-size="28" font-weight="bold" font-family="Arial, sans-serif"
+                  fill="black" text-anchor="middle" dominant-baseline="middle">
+                <tspan font-size="32" font-weight="bold" fill="purple">A</tspan>ssociation
+            </text>
+        </svg>
+        
+        
+           </div>
+      <h2>Sign Up</h2>
+      <p>Create your account</p>
+      
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="username">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput type="password" formControlName="confirmPassword">
+        </mat-form-field>
+  
+        <p *ngIf="signupForm.hasError('mismatch')" class="error-text">Passwords do not match.</p>
+  
+        <button mat-raised-button color="primary" class="full-width" [disabled]="loading">
+          {{ loading ? 'Signing Up...' : 'Sign Up' }}
+        </button>
+      </form>
+  
+      <p>Already have an account? <a [routerLink]="['/login']">Log In</a></p>
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+    </div>
+  </div>
+  

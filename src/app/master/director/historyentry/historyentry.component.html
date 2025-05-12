@@ -1,0 +1,248 @@
+<app-section title="Interest in other entities">
+  <form [formGroup]="directorForm">
+    <div formArrayName="directors">
+      <mat-card
+        class="director-form-card" style="display: flex; gap:5px; margin-bottom: 10px;"
+        *ngFor="let director of directors.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <mat-card-content class="row">
+
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>Company Name</mat-label>
+              <input
+                matInput
+                formControlName="companyName"
+                placeholder="Enter company name"
+                required
+              />
+              <mat-error *ngIf="director.get('companyName')?.hasError('required')"
+                >Company Name is required.</mat-error
+              >
+            </mat-form-field>
+  
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>Designation</mat-label>
+              <mat-select
+                formControlName="role"
+                (selectionChange)="onRoleChange(i, $event)"
+                required
+              >
+                <mat-option
+                  *ngFor="let occupation of designationOptions"
+                  [value]="occupation"
+                >
+                  {{ occupation }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="director.get('role')?.hasError('required')"
+                >Role is required.</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field
+              class="column"
+              *ngIf="directors.controls[i].get('role')?.value === 'Other'"
+              [appearance]="appearance()"
+            >
+              <mat-label>Enter Other Designation</mat-label>
+              <input
+                matInput
+                formControlName="otherRole"
+                placeholder="Enter designation"
+              />
+              <mat-error *ngIf="director.get('otherRole')?.hasError('required')"
+                >Designation is required.</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>Starting Date</mat-label>
+              <input
+                formControlName="startingDate"
+                matInput
+                [matDatepicker]="pickerStart"
+                [max]="maxDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="pickerStart"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickerStart></mat-datepicker>
+              <mat-error
+                *ngIf="director.get('startingDate')?.hasError('required')"
+                >Starting Date is required.</mat-error
+              >
+              <mat-error
+                *ngIf="director.get('startingDate')?.hasError('startDateInvalid')"
+                >Cannot select future date.</mat-error
+              >
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="clearStartDate(i)"
+                aria-label="Clear date"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </mat-card-content>
+            <mat-card-content class="row">
+
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>End Date</mat-label>
+              <input
+                formControlName="endDate"
+                matInput
+                [matDatepicker]="endpicker"
+                [max]="maxDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="endpicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endpicker></mat-datepicker>
+              <mat-error
+                *ngIf="director.get('endDate')?.hasError('endDateBeforeStart')"
+                >End Date cannot be before Start Date.</mat-error
+              >
+              <mat-error *ngIf="director.get('endDate')?.hasError('sameDates')"
+                >Start and End Dates cannot be the same.</mat-error
+              >
+              <mat-error *ngIf="director.get('endDate')?.hasError('overlap')"
+                >Dates overlap with another row.</mat-error
+              >
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="clearEndDate(i)"
+                aria-label="Clear date"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Nature Of Interest</mat-label>
+            <mat-select formControlName="natureofInterest" required>
+              <mat-option
+                *ngFor="let occupation of natureOfInterestOptions"
+                [value]="occupation.value"
+              >
+                {{ occupation.label }}
+              </mat-option>
+              <mat-option value="Other">Other</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="director.get('natureofInterest')?.hasError('required')"
+              >nature of Interest is required.</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Shareholding (In Per)</mat-label>
+            <input
+              matInput
+              formControlName="shareholding"
+              placeholder="Enter shares"
+            />
+            <mat-error
+              *ngIf="director.get('shareholding')?.hasError('required')"
+              >shareholding is required.</mat-error
+            >
+      
+            <mat-error *ngIf="director.get('shareholding')?.hasError('min')">
+              Value must be at least 0%.
+            </mat-error>
+            <mat-error *ngIf="director.get('shareholding')?.hasError('max')">
+              Value cannot exceed 100%.
+            </mat-error>
+            <mat-error *ngIf="director.get('shareholding')?.hasError('pattern')">
+              Only numeric values allowed.
+            </mat-error>
+          </mat-form-field>
+         
+        </mat-card-content>
+        <mat-card-content class="row">
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Shareholding (In Rupees)</mat-label>
+            <input
+              matInput
+              formControlName="shareholdingRupees"
+              placeholder="Enter shares in amount"
+            />
+            <mat-error
+              *ngIf="director.get('shareholdingRupees')?.hasError('required')"
+              >shareholding is required.</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Date on which interest</mat-label>
+            <input
+              formControlName="dateofAlloted"
+              matInput
+              [matDatepicker]="endpicker1"
+              [max]="maxDate"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="endpicker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #endpicker1></mat-datepicker>
+            <mat-error
+              *ngIf="director.get('dateofAlloted')?.hasError('required')"
+              >Date on which interest is required.</mat-error
+            >
+
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clearEndDate(i)"
+              aria-label="Clear date"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <!-- <div class="actions">
+            <button mat-icon-button color="primary" (click)="addRow()">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="removeRow(i)"
+              *ngIf="directors.length > 1"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div> -->
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      "
+    >
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        style="width: 150px"
+        (click)="onSubmit()"
+        [disabled]="!directorForm.valid"
+      >
+        Submit
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        type="button"
+        (click)="onReset()"
+        style="width: 150px"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</app-section>

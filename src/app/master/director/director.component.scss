@@ -1,0 +1,134 @@
+.common-inputs-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px; /* Adjust the gap between fields as needed */
+  }
+  
+  .column {
+    flex: 1; /* Adjust the width of columns */
+    min-width: 200px; /* Minimum width of each column */
+  }
+  mat-form-field {
+    width: 100%;
+    max-width: 100%;
+}
+.button-gap {
+  margin-right: 10px;
+}
+.button-container {
+  float: right;
+  margin-bottom: 30px;
+}
+/* Ensure the container has a scrollable width */
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Enables horizontal scrolling */
+  max-height: 100%;
+}
+
+/* Table Styling */
+table {
+  width: 100%; /* Ensures table takes full width */
+  min-width: 1200px; /* Prevents columns from shrinking too much */
+  border-collapse: collapse;
+}
+
+/* Header Row Styling */
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Cell Styling */
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Actions Column Styling */
+td:last-child {
+  text-align: center;
+}
+
+/* Button Styling */
+button {
+  margin-right: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    min-width: 100%;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+.action-icon {
+  cursor: pointer;
+  margin: 0 5px;
+  color: rgba(0, 0, 0, 0.54); /* Optional: default color */
+}
+.action-icon:hover {
+  color: rgba(0, 0, 0, 0.87); /* Optional: hover color */
+}
+
+tr.selected {
+  background-color: #e0f7fa !important; /* Light cyan */
+}
+
+.table-container {
+  max-height: 100%;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0px;
+}
+
+.custom-table {
+  min-width: 1600px !important;
+  width: 100%;
+  font-size: 12px;
+}
+
+.mat-header-cell, .mat-cell {
+  padding: 6px 6px; /* Reduced row height */
+  white-space: nowrap;
+  border: 1px solid #7c6d6d;
+}
+
+.clickable {
+  cursor: pointer;
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+.clickable:hover {
+  color: #12579d;
+}
+
+.action-icon {
+  cursor: pointer;
+  margin: 0 5px;
+  color: #666;
+  transition: color 0.2s ease-in-out;
+}
+
+.action-icon:hover {
+  color: #000;
+}
+
+.selected {
+  background-color: #18bacf;
+}

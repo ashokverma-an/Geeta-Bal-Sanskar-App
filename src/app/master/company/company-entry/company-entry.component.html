@@ -1,0 +1,214 @@
+<h3 style="font-weight: 400; text-align: center;">{{ isEditMode ? 'Edit Company Registration' : 'New Company
+  Registration' }}</h3>
+<div>
+  <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="common-inputs-wrapper">
+    <div class="button-container" style="display: flex; justify-content: flex-end; gap: 10px;">
+      <button mat-raised-button type="button" color="primary" (click)="expandAll()" style="width: 150px;">
+        Expand All
+      </button>
+      <button mat-flat-button type="button" class="secondary-button" (click)="collapseAll()" style="width: 150px;">
+        Collapse All
+      </button>
+    </div>
+    <mat-accordion #accordion="matAccordion" [multi]="true">
+      <!-- Basic Information -->
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Basic Information
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <!-- CIN Input Field -->
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>CIN</mat-label>
+            <input matInput formControlName="cin" placeholder="Enter CIN" maxlength="21"
+              (input)="convertToUppercase()" />
+
+            <mat-error *ngIf="companyForm.get('cin')?.hasError('required')">
+              CIN is required.
+            </mat-error>
+            <mat-error *ngIf="companyForm.get('cin')?.hasError('maxlength')">
+              CIN cannot exceed 21 characters.
+            </mat-error>
+            <mat-error *ngIf="companyForm.get('cin')?.hasError('pattern')">
+              Invalid CIN format. Example: <b>L12345RJ2024PLC012345</b>
+            </mat-error>
+          </mat-form-field>
+          <!-- Registration Number (Disabled) -->
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Registration Number</mat-label>
+            <input matInput formControlName="registrationNumber" (keydown)="preventKeyPress($event)" placeholder="Auto-filled from CIN" />
+          </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="companyName" placeholder="Enter Company Name" />
+            @if(companyForm.get('companyName')?.hasError('required')) {
+            <mat-error>Company Name is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row">
+
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Date of Incorporation</mat-label>
+            <input formControlName="dateOfIncorporation" matInput [matDatepicker]="picker" [max]="maxDate"
+            [matDatepickerFilter]="dateFilter" (keydown)="allowManualInput($event)" [matDatepickerFilter]="dateFilter"
+            (ngModelChange)="formatDate($event)" (input)="onDateInput($event)" placeholder="DD-MM-YYYY" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <button mat-icon-button matSuffix (click)="clearDateofIncorporation()" aria-label="Clear date">
+              <mat-icon>close</mat-icon>
+            </button>
+            @if(companyForm.get('dateOfIncorporation')?.hasError('required')) {
+            <mat-error>Date of Incorporation is required.</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Type</mat-label>
+            <mat-select formControlName="companyType" placeholder="Select Company Type">
+              @for (type of companyTypes ; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+              }
+            </mat-select>
+            @if(companyForm.get('compnayType')?.hasError('required')) {
+            <mat-error>Compnay Type is required.</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field class="column" [appearance]="appearance()"
+            *ngIf="companyForm.get('compnayType')?.value === 'Others'">
+            <mat-label>Other Company Type</mat-label>
+            <input matInput formControlName="othercompanyType" placeholder="Enter Other Type" />
+          </mat-form-field>
+        </div>
+      </mat-expansion-panel>
+      <!-- Contact Information -->
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Company Contact Information
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Country</mat-label>
+            <mat-select formControlName="country">
+              <mat-option *ngFor="let country of countryTypes" [value]="country">{{ country }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company State</mat-label>
+            <mat-select formControlName="state" [disabled]="states.length === 0">
+              <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company District</mat-label>
+            <mat-select formControlName="city" [disabled]="districts.length === 0">
+              <mat-option *ngFor="let district of districts" [value]="district">{{ district }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="row">
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Postal Code</mat-label>
+            <input matInput formControlName="postalCode" placeholder="Enter Postal Code" maxlength="6"
+              (keypress)="preventInvalidEmail($event)" />
+            @if(companyForm.get('postalCode')?.hasError('required')) {
+            <mat-error>Postal Code is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Email Address</mat-label>
+            <input matInput formControlName="emailAddress" placeholder="Enter Email Address"
+              (keypress)="preventInvalidEmail($event)" />
+            @if(companyForm.get('emailAddress')?.hasError('required')) {
+            <mat-error>Email Address is required.</mat-error>
+            }@else if(companyForm.get('emailAddress')?.hasError('invalidEmail')){
+            <mat-error>Invalid email address.</mat-error>
+            }
+
+          </mat-form-field>
+
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Company Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="Enter Phone Number" maxlength="13"
+              (focus)="setDefaultValue('phoneNumber', '+91')" (keypress)="preventInvalidChars($event)" />
+            @if(companyForm.get('phoneNumber')?.hasError('required')) {
+            <mat-error>Phone Number is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="column" [appearance]="appearance()">
+            <mat-label>Registered Office Address</mat-label>
+            <textarea matInput formControlName="registeredOfficeAddress" placeholder="Enter Address"></textarea>
+            @if(companyForm.get('registeredOfficeAddress')?.hasError('required')) {
+            <mat-error>Address is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+      </mat-expansion-panel>
+      <!-- Additional Information -->
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Additional Information
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+  
+          <div class="row">
+            <!-- GST Number -->
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>GST Number</mat-label>
+              <input matInput formControlName="gstNumber" placeholder="Enter GST Number" />
+            </mat-form-field>
+            <!-- TAN Number -->
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>TAN Number</mat-label>
+              <input matInput formControlName="tanNumber" placeholder="Enter TAN Number" />
+            </mat-form-field>
+            <!-- TAN Number -->
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>PAN Number</mat-label>
+              <input matInput formControlName="panNumber" placeholder="Enter PAN Number" />
+            </mat-form-field>
+  
+  
+          </div>
+          <div class="row">
+  
+            <mat-form-field class="column" [appearance]="appearance()">
+              <mat-label>Sector</mat-label>
+              <mat-select formControlName="sector" placeholder="Select Sector">
+                @for (sector of sectors; track sector) {
+                <mat-option [value]="sector">{{ sector }}</mat-option>
+                }
+              </mat-select>
+              @if(companyForm.get('sector')?.hasError('required')) {
+              <mat-error>Sector is required.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+  
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div style="display: flex; justify-content: center; gap: 10px;">
+      <button mat-raised-button color="primary" type="submit" style="width: 150px;" [disabled]="!companyForm.valid" >
+        Submit
+      </button>
+      <button mat-raised-button color="warn" type="button" (click)="onReset()" style="width: 150px;">
+        Cancel
+      </button>
+    </div>
+
+
+  </form>
+</div>

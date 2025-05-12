@@ -1,0 +1,502 @@
+<!-- <h2 style="font-weight: 400; text-align: center">{{ "Company Detail" }}</h2> -->
+
+<div>
+  <!-- <div class="button-container" style="display: flex; justify-content: flex-start; gap: 10px;">
+      <button mat-raised-button type="button" color="primary" (click)="expandAll()" style="width: 150px;">
+        Expand All
+      </button>
+      <button mat-flat-button type="button" class="secondary-button" (click)="collapseAll()" style="width: 150px;">
+        Collapse All
+      </button>
+    </div> -->
+  <div>
+    <mat-accordion #accordion="matAccordion" [multi]="true">
+      <mat-expansion-panel [expanded]="true" style="margin-top: 10px">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Company Details</mat-panel-title>
+        </mat-expansion-panel-header>
+          <!-- First Row -->
+          <div class="row">
+            <!-- Column 1 -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="list-group">
+                    <div class="list-group-item">
+                      <strong>Company CIN :</strong> {{ companyData.cin }}
+                    </div>
+                    <div class="list-group-item">
+                      <strong>Company Name :</strong> {{ companyData.companyName }}
+                    </div>
+                    <div class="list-group-item">
+                      <strong>Company Type:</strong> {{ companyData.companyType }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+            <!-- Column 2 -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="list-group">
+                    <div class="list-group-item">
+                      <strong>Date Of Incorporation:</strong>
+                      {{ companyData.dateOfIncorporation | date:'dd-MM-yyyy' }}
+                    </div>
+                    <div class="list-group-item">
+                      <strong>GST Number:</strong> {{ companyData.gstNumber }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+            <!-- Column 3 -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="list-group">
+                    <div class="list-group-item">
+                      <strong>Email Address:</strong> {{ companyData.emailAddress }}
+                    </div>
+                    <div class="list-group-item">
+                      <strong>Contact Number:</strong> {{ companyData.phoneNumber }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>        
+      </mat-expansion-panel>
+
+      <form [formGroup]="companyDrectorKMP" class="common-inputs-wrapper" style="margin-top: 10px">
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Director/KMP </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              gap: 10px;
+              margin-bottom: 20px;
+            "
+          >
+            <button
+              mat-raised-button
+              color="primary"
+              type="button "
+              style="width: 150px"
+              (click)="AddDirectorToComapnay()"
+            >
+              Map Directors
+            </button>
+          </div>
+          @if(ShowDirectorTable){
+          <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input
+              matInput
+              (keyup)="applyFilter($event)"
+              placeholder="Ex. ium"
+              #input
+            />
+          </mat-form-field>
+          @if(dataSource.data.length>0){
+          <div class="table-container">
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="mat-elevation-z8 custom-table"
+            >
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef>No.</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.position }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nameOfDirector">
+                <th mat-header-cell *matHeaderCellDef>Name Of Director</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.DirectorName }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="designationOfDirector">
+                <th mat-header-cell *matHeaderCellDef>
+                  Designation Of Director
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.postOfDirector }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="directorshipType">
+                <th mat-header-cell *matHeaderCellDef>Directorship Type</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.directorshipType }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateOfAppointment">
+                <th mat-header-cell *matHeaderCellDef>Date Of Appointment</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.dateOfAppointment | date : "dd-MM-yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateOfCessation">
+                <th mat-header-cell *matHeaderCellDef>Date Of Cessation</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.dateOfCessation | date : "dd-MM-yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element">
+                      <mat-icon class="action-icon" (click)="editRow(element)">edit</mat-icon>
+                      <mat-icon class="action-icon" (click)="deleteRow(element)">delete</mat-icon>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns; let i = index"
+                (click)="onRowClick(i, row)"
+                (keydown)="handleKeyDown($event, row, i)"
+                [class.selected]="selectedRowIndex === i"
+                tabindex="0"
+              ></tr>
+            </table>
+          </div>
+          }@else{ No director mapped with this company } }@else{
+          <div formArrayName="directors" class="container">
+            <div
+              *ngFor="let director of directors.controls; let i = index"
+              [formGroupName]="i"
+              class="row"
+            >
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Name of Director</mat-label>
+                  <mat-select
+                    formControlName="ceoManagingDirector"
+                    placeholder="Select CEO/Managing Director"
+                  >
+                    <mat-option
+                      *ngFor="let dir of drectorList"
+                      [value]="dir.directorId"
+                      >{{ dir.firstName }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      director.get('ceoManagingDirector')?.hasError('required')
+                    "
+                    >Name of Director is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Designation of Director</mat-label>
+                  <mat-select
+                    formControlName="postOfDirector"
+                    placeholder="Select Designation"
+                  >
+                    <mat-option
+                      *ngFor="let post of postDirectorTypes"
+                      [value]="post"
+                      >{{ post }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="director.get('postOfDirector')?.hasError('required')"
+                    >Post of Director is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div
+                class="col-md-4"
+                *ngIf="director.get('postOfDirector')?.value === 'Others'"
+              >
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Other Post of Director</mat-label>
+                  <input
+                    matInput
+                    formControlName="otherpostOfDirector"
+                    placeholder="Enter post director"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Directorship Type</mat-label>
+                  <mat-select formControlName="directorshipType" multiple>
+                    <mat-option
+                      *ngFor="let type of directorshipTypes"
+                      [value]="type"
+                      (onSelectionChange)="onSelectionChange($event, type, i)"
+                      >{{ type }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      director.get('directorshipType')?.hasError('required')
+                    "
+                    >Directorship Type is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Date of Appointment</mat-label>
+                  <input
+                    matInput
+                    formControlName="dateOfAppointment"
+                    [matDatepicker]="picker1"
+                    readonly
+                    [max]="maxDate"
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="clearDateofAppointment($event)"
+                    aria-label="Clear date"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error
+                    *ngIf="
+                      director.get('dateOfAppointment')?.hasError('required')
+                    "
+                    >Date of Appointment is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Date of Cessation</mat-label>
+                  <input
+                    matInput
+                    formControlName="dateOfCessation"
+                    [matDatepicker]="picker2"
+                    readonly
+                    [max]="maxDate"
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="clearDateofAppointment($event)"
+                    aria-label="Clear date"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error
+                    *ngIf="
+                      director.get('dateOfCessation')?.hasError('required')
+                    "
+                    >Date of Cessation is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 d-flex align-items-center">
+                <button mat-icon-button color="primary" (click)="addDirector()">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeDirector(i)"
+                  *ngIf="directors.length > 1"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              gap: 10px;
+              margin: 40, 40, 40, 40;
+            "
+          >
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              style="width: 150px"
+              (click)="onDirectorSubmit()"
+              [disabled]="!companyDrectorKMP.valid"
+            >
+              Submit
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              class="secondary-button"
+              type="button"
+              (click)="onReset()"
+              style="width: 150px"
+            >
+              Cancel
+            </button>
+          </div>
+          <div *ngIf="loading" class="loader-container">
+            <mat-spinner diameter="50"></mat-spinner>
+          </div>
+          }
+        </mat-expansion-panel>
+      </form>
+
+        <mat-expansion-panel [expanded]="true" style="margin-top: 10px">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Capital Details</mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-copaital-company [companyData]="companyData"></app-copaital-company>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="true" style="margin-top: 10px">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Document</mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-genratedocument    *ngIf="showGenerateDoc" [companyId]="companyId"></app-genratedocument>
+        </mat-expansion-panel>
+      <!-- <form [formGroup]="companyForm" class="common-inputs-wrapper">
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Company Shareholder / Members </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div formArrayName="shareholders" class="container">
+            <div
+              *ngFor="let shareholder of shareholders.controls; let i = index"
+              [formGroupName]="i"
+              class="row"
+            >
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Shareholder Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="name"
+                    placeholder="Enter shareholder name"
+                  />
+                  <mat-error *ngIf="shareholder.get('name')?.hasError('required')"
+                    >Name is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Share Percentage</mat-label>
+                  <input
+                    matInput
+                    formControlName="sharePercentage"
+                    type="number"
+                    placeholder="Enter share percentage"
+                  />
+                  <mat-error
+                    *ngIf="
+                      shareholder.get('sharePercentage')?.hasError('required')
+                    "
+                    >Share percentage is required.</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      shareholder.get('sharePercentage')?.hasError('min') ||
+                      shareholder.get('sharePercentage')?.hasError('max')
+                    "
+                  >
+                    Share percentage must be between 0 and 100.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Contact Number</mat-label>
+                  <input
+                    matInput
+                    formControlName="contactNumber"
+                    placeholder="Enter contact number"
+                  />
+                  <mat-error
+                    *ngIf="shareholder.get('contactNumber')?.hasError('required')"
+                    >Contact number is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>Email Address</mat-label>
+                  <input
+                    matInput
+                    formControlName="emailAddress"
+                    placeholder="Enter email address"
+                  />
+                  <mat-error
+                    *ngIf="shareholder.get('emailAddress')?.hasError('required')"
+                    >Email address is required.</mat-error
+                  >
+                  <mat-error
+                    *ngIf="shareholder.get('emailAddress')?.hasError('email')"
+                    >Invalid email address.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="addShareholder()"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="removeShareholder(i)"
+                    *ngIf="shareholders.length > 1"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title> Meetings </mat-panel-title>
+          </mat-expansion-panel-header>
+  
+          Comming soomn.......
+        </mat-expansion-panel> -->
+      <!-- </form> -->
+    </mat-accordion>
+  </div>
+
+  
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 50px;">
+      <button mat-raised-button color="warn" class="secondary-button" type="button" (click)="onReset()"
+        style="width: 150px;">
+       Go Back
+      </button>
+    </div>
+</div>

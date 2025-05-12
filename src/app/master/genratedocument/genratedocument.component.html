@@ -1,0 +1,48 @@
+<app-section title="MCA Document's Generation">
+    <div>
+      <form [formGroup]="directorForm" (ngSubmit)="onSubmit()" class="common-inputs-wrapper">
+        <div class="row">
+            <mat-form-field class="column" [appearance]="appearance()">
+                <mat-label>Select Document</mat-label>
+                <mat-select formControlName="documentType" >
+                  <mat-option *ngFor="let doc of documentNames" [value]="doc">{{ doc }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="column" [appearance]="appearance()">
+                <mat-label>Select Company</mat-label>
+                <mat-select formControlName="selectedCompany" (selectionChange)="fetchDrectorList($event.value)">
+                  <mat-option *ngFor="let company of companyList" [value]="company.companyId" >{{ company.companyName }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="column" [appearance]="appearance()">
+                <mat-label>Select Director</mat-label>
+                <mat-select formControlName="selectedDirector" (selectionChange)="loadCompanyData()">
+                  <mat-option *ngFor="let director of directors" [value]="director.directorId">{{ director.fullName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            
+              <mat-form-field class="column" [appearance]="appearance()">
+                <mat-label>Choose a date</mat-label>
+                <input formControlName="todate" matInput [matDatepicker]="picker" readonly 
+                       (keydown)="preventKeyPress($event)" [max]="maxDate"/>
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              
+                @if(directorForm.get('todate')?.hasError('required')) {
+                  <mat-error>To date is required.</mat-error>
+                }
+              </mat-form-field>
+        </div>
+        <!-- -->
+        <div style="display: flex; justify-content: center; gap: 10px;">
+          <button mat-raised-button color="primary" type="submit" style="width: 150px;" [disabled]="!directorForm.valid">
+            Generate file
+          </button>
+          <button mat-raised-button color="warn" type="button" (click)="onReset()" style="width: 150px;">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    </app-section>

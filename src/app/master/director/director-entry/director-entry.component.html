@@ -1,0 +1,500 @@
+<app-section title="New Director">
+  <div>
+    <form [formGroup]="directorForm" (ngSubmit)="onSubmit()" class="common-inputs-wrapper">
+      <div class="row" style="display: flex; align-items: center; gap: 10px;">
+        <label style="font-weight: bold; white-space: nowrap;">Director is already having DIN</label>
+        <mat-radio-group formControlName="isNewDirector" (change)="onDirectorStatusChange()"
+          style="display: flex; gap: 15px;">
+          <mat-radio-button [value]="true">Yes</mat-radio-button>
+          <mat-radio-button [value]="false">No</mat-radio-button>
+        </mat-radio-group>
+        <!-- <mat-error *ngIf="directorForm.get('isNewDirector')?.hasError('required')">Director is already having DIN is required.</mat-error> -->
+      </div>
+      <div class="row">
+
+
+        <!-- DIN Number Input (Required only if "No" is selected) -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>DIN No.</mat-label>
+          <input matInput formControlName="dinNO" placeholder="Enter DIN No."
+            (keypress)="preventNonNumericInput($event, 8)" maxlength="8" />
+          <mat-error *ngIf="directorForm.get('dinNO')?.hasError('required')">DIN Number is required.</mat-error>
+          <mat-error *ngIf="directorForm.get('dinNO')?.hasError('pattern')">Only numbers allowed.</mat-error>
+          <mat-error *ngIf="directorForm.get('dinNO')?.hasError('maxlength')">Maximum length is 8
+            characters.</mat-error>
+        </mat-form-field>
+
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="Enter first name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('firstName')?.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+          }
+          @if(directorForm.get('firstName')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('firstName')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="LastName" placeholder="Enter last name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('LastName')?.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+          }
+          @if(directorForm.get('LastName')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('LastName')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Midle Name</mat-label>
+          <input matInput formControlName="MiddleName" placeholder="Enter middle name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('name')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('name')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Father First Name</mat-label>
+          <input matInput formControlName="ffirstName" placeholder="Enter father name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('firstName')?.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+          }
+          @if(directorForm.get('firstName')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('firstName')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Father Last Name</mat-label>
+          <input matInput formControlName="fLastName" placeholder="Enter father last name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('LastName')?.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+          }
+          @if(directorForm.get('LastName')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('LastName')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+        <!-- Name -->
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Father Midle Name</mat-label>
+          <input matInput formControlName="fMiddleName" placeholder="Enter father middle name"
+            (keypress)="preventInvalidNameInput($event, 100)" maxlength="100" />
+          @if(directorForm.get('name')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+          @if(directorForm.get('name')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Whether Citizen of India</mat-label>
+          <mat-select formControlName="citizenOfIndia" placeholder="Select options">
+            <mat-option value="Yes">Yes</mat-option>
+            <mat-option value="No">No</mat-option>
+          </mat-select>
+          @if (directorForm.get('citizenOfIndia')?.hasError('required')) {
+          <mat-error>Citizenship is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Nationality</mat-label>
+          <mat-select formControlName="nationality">
+            @for (nationality of nationalityOptions; track $index) {
+            <mat-option [value]="nationality">{{ nationality }}</mat-option>
+            }
+          </mat-select>
+          @if (directorForm.get('nationality')?.hasError('required')) {
+          <mat-error>Nationality is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()"
+          *ngIf="directorForm.get('nationality')?.value === 'Other'">
+          <mat-label>Other Nationality</mat-label>
+          <input matInput formControlName="otherNationality" placeholder="Enter nationality" maxlength="20" />
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Whether Resident of India</mat-label>
+          <mat-select formControlName="residentOfIndia" placeholder="Select options">
+            <mat-option value="Yes">Yes</mat-option>
+            <mat-option value="No">No</mat-option>
+          </mat-select>
+          @if (directorForm.get('residentOfIndia')?.hasError('required')) {
+          <mat-error>Resident is required.</mat-error>
+          }
+        </mat-form-field>
+
+
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Occupation Type</mat-label>
+          <mat-select formControlName="occupationtype" placeholder="Select an option">
+            <mat-option value="Self-Employed">Self-Employed</mat-option>
+            <mat-option value="Professionals">Professionals</mat-option>
+            <mat-option value="Homemaker">Homemaker</mat-option>
+            <mat-option value="Student">Student</mat-option>
+            <mat-option value="Service Man">Service Man</mat-option>
+            <mat-option value="Other">Other</mat-option>
+          </mat-select>
+          <mat-error *ngIf="directorForm.get('occupationtype')?.hasError('required')">
+            Occupation is required.
+          </mat-error>
+
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Area of Occupation</mat-label>
+          <input matInput formControlName="areaofoccupation" placeholder="Enter area of Occupation" maxlength="20" />
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()"
+          *ngIf="directorForm.get('occupationtype')?.value === 'Other'">
+          <mat-label>Other Occupation</mat-label>
+          <input matInput formControlName="otheroccupationtype" placeholder="Enter Other Occupation" maxlength="20" />
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Educational Qualification</mat-label>
+          <mat-select formControlName="educationQualification" (selectionChange)="onEducationChange($event.value)">
+            <mat-option *ngFor="let option of educationOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+            <mat-option value="Others">Others</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="column" *ngIf="showOtherEducation" [appearance]="appearance()">
+          <mat-label>Enter Other Qualification</mat-label>
+          <input matInput formControlName="otherEducation" placeholder="Specify Qualification" maxlength="20" />
+        </mat-form-field>
+      </div>
+
+
+      <div class="row">
+
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Date of Birth</mat-label>
+          <input formControlName="dob" matInput [matDatepicker]="picker" [max]="maxDate"
+            [matDatepickerFilter]="dateFilter" (keydown)="allowManualInput($event)" [matDatepickerFilter]="dateFilter"
+            (ngModelChange)="formatDate($event)" (input)="onDateInput($event)" placeholder="DD-MM-YYYY" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <button mat-icon-button matSuffix (click)="clearDOBDate()" aria-label="Clear date">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="directorForm.get('dob')?.hasError('required')">
+            Date of birth is required.
+          </mat-error>
+          <mat-error *ngIf="directorForm.get('dob')?.hasError('minAge')">
+            Director must be at least 18 years old.
+          </mat-error>
+        </mat-form-field>
+   
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender" placeholder="Select Gender">
+            @for (gender of genderOptions; track gender) {
+            <mat-option [value]="gender">
+              {{ gender }}
+            </mat-option>
+            }
+          </mat-select>
+          @if (directorForm.get('gender')?.hasError('required')) {
+          <mat-error>Gender is required.</mat-error>
+          }
+          @if (directorForm.get('gender')?.hasError('pattern')) {
+          <mat-error>Only alphabets are allowed.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Income-tax PAN</mat-label>
+          <input matInput formControlName="pancard" placeholder="Enter PAN Card"
+            (keydown)="panPreventInvalidChars($event)" maxlength="10" />
+        
+          <mat-error *ngIf="directorForm.get('pancard')?.hasError('pattern')">
+            Enter a valid PAN card number.
+            <span *ngIf="directorForm.get('lastName')?.value">
+              (4th character must be 'P', 5th must be '{{ directorForm.get('LastName')?.value.charAt(0).toUpperCase() }}')
+            </span>
+          </mat-error>
+        
+          <mat-error *ngIf="directorForm.get('pancard')?.hasError('required')">
+            PAN card is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Voter Identity Card Number </mat-label>
+          <input matInput formControlName="voterIdentityCardNumber" placeholder="Enter Voter Card Number"
+            (keydown)="panPreventInvalidChars($event)" />
+          @if(directorForm.get('voterIdentityCardNumber')?.hasError('pattern')) {
+          <mat-error>voter number should be as standard number pattern.</mat-error>
+          }
+        </mat-form-field>
+
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Passport Number </mat-label>
+          <input matInput formControlName="passportNumber" placeholder="Enter Passport Number"
+            (keydown)="panPreventInvalidChars($event)" />
+            @if(directorForm.get('passportNumber')?.hasError('pattern')) {
+              <mat-error>passport number should be as standard number pattern.</mat-error>
+              }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Driving Licence Number </mat-label>
+          <input matInput formControlName="drivingLicence" placeholder="Enter driving licence number"
+            (keydown)="drvingPreventInvalidChars($event)" max="16"/>
+          @if(directorForm.get('drivingLicence')?.hasError('pattern')) {
+          <mat-error>driving licence number should be as standard number pattern.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Aadhar Number</mat-label>
+          <input matInput formControlName="aadharcard" placeholder="Enter Aadhar Card"
+            (keydown)="aadharPreventInvalidChars($event)" />
+          @if(directorForm.get('aadharcard')?.hasError('invalidAadhar')) {
+          <mat-error>Enter a valid 12-digit Aadhar card number (e.g., 1234-5678-9123).</mat-error>
+          }
+          @if(directorForm.get('aadharcard')?.hasError('required')) {
+          <mat-error>Aadhar is required.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="row">
+        Permanent Address
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Permanent Residential Address</mat-label>
+          <input matInput formControlName="permanentaddress" placeholder="Enter parmanent address" />
+
+          @if (directorForm.get('permanentaddress')?.hasError('required')) {
+          <mat-error>Address is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Company Country</mat-label>
+          <mat-select formControlName="country">
+            <mat-option *ngFor="let country of countryTypes" [value]="country">{{ country }}</mat-option>
+          </mat-select>
+          @if (directorForm.get('country')?.hasError('required')) {
+            <mat-error>Country is required.</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Company State</mat-label>
+          <mat-select formControlName="state" [disabled]="states.length === 0">
+            <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+          </mat-select>
+          @if (directorForm.get('state')?.hasError('required')) {
+            <mat-error>State is required.</mat-error>
+            }
+        </mat-form-field>
+
+       
+      </div>
+      <div class="row"> 
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Company District</mat-label>
+          <mat-select formControlName="district" [disabled]="districts.length === 0">
+            <mat-option *ngFor="let district of districts" [value]="district">{{ district }}</mat-option>
+          
+          </mat-select>
+          @if (directorForm.get('district')?.hasError('required')) {
+            <mat-error>City is required.</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Pincode</mat-label>
+          <input matInput formControlName="pincode" type="text" placeholder="Enter Pincode"
+            (keydown)="pancardPreventInvalidChars($event)" />
+          @if(directorForm.get('pincode')?.hasError('required')) {
+          <mat-error>Pincode is required.</mat-error>
+          }
+          @if(directorForm.get('pincode')?.hasError('pattern')) {
+          <mat-error>Enter a valid 6-digit pincode.</mat-error>
+          }
+        </mat-form-field>
+    
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>ISO Country Code</mat-label>
+          <input matInput formControlName="isoCountryCode" type="text" placeholder="Enter ISO code"
+            (keydown)="pancardPreventInvalidChars($event)" />
+          @if(directorForm.get('isoCountryCode')?.hasError('required')) {
+          <mat-error>ISO Country Code is required.</mat-error>
+          }
+          @if(directorForm.get('isoCountryCode')?.hasError('pattern')) {
+          <mat-error>Enter a valid 6-digit pincode.</mat-error>
+          }
+        </mat-form-field>
+
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Mobile Number</mat-label>
+          <input matInput formControlName="mobile" placeholder="Enter Phone Number"
+            (keypress)="preventInvalidMobileInput($event, 13)" maxlength="13" (input)="ensureCountryCode()" />
+
+          @if (directorForm.get('mobile')?.hasError('required')) {
+          <mat-error>Mobile number is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>FAX</mat-label>
+          <input matInput formControlName="fax" placeholder="Enter FAX Number" />
+
+          @if (directorForm.get('fax')?.hasError('required')) {
+          <mat-error>fax number is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Enter Email" />
+
+          @if (directorForm.get('email')?.hasError('required')) {
+          <mat-error>Email is required.</mat-error>
+          }
+
+          @if (directorForm.get('email')?.hasError('email')) {
+          <mat-error>Please enter a valid email address.</mat-error>
+          }
+
+          @if (directorForm.get('email')?.hasError('maxlength')) {
+          <mat-error>Maximum length is 100 characters.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-checkbox formControlName="sameAsPermanent" (change)="copyPermanentAddress($event.checked)">
+          Whether present residential address same as permanent residential address
+        </mat-checkbox>
+      </div>
+      @if(!this.directorForm.get('sameAsPermanent')?.value){
+      <div class="row">
+        Present Address
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Present Residential Address</mat-label>
+          <input matInput formControlName="presentaddress" placeholder="Enter present address" />
+
+          @if (directorForm.get('presentaddress')?.hasError('required')) {
+          <mat-error>Present residential address is required.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Present Country</mat-label>
+          <mat-select formControlName="presentCountry">
+            <mat-option *ngFor="let country of countryTypes" [value]="country">{{ country }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Company State</mat-label>
+          <mat-select formControlName="presentState" [disabled]="states.length === 0">
+            <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      
+      </div>
+      <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Present District</mat-label>
+          <mat-select formControlName="presentDistrict" [disabled]="districts.length === 0">
+            <mat-option *ngFor="let district of districts" [value]="district">{{ district }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Pincode</mat-label>
+          <input matInput formControlName="presentPincode" type="text" placeholder="Enter Present Pincode"
+            (keydown)="pancardPreventInvalidChars($event)" />
+          @if(directorForm.get('presentPincode')?.hasError('required')) {
+          <mat-error>present Pincode is required.</mat-error>
+          }
+          @if(directorForm.get('presentPincode')?.hasError('pattern')) {
+          <mat-error>Enter a valid 6-digit pincode.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>ISO Country Code</mat-label>
+          <input matInput formControlName="isoPresentCountryCode" type="text" placeholder="Enter ISO code"
+            (keydown)="pancardPreventInvalidChars($event)" />
+          @if(directorForm.get('isoPresentCountryCode')?.hasError('required')) {
+          <mat-error>ISO Country Code is required.</mat-error>
+          }
+          @if(directorForm.get('isoCountryCode')?.hasError('pattern')) {
+          <mat-error>Enter a valid 6-digit pincode.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>FAX</mat-label>
+          <input matInput formControlName="fax" placeholder="Enter FAX Number" />
+
+          @if (directorForm.get('fax')?.hasError('required')) {
+          <mat-error>fax number is required.</mat-error>
+          }
+        </mat-form-field>
+     
+  
+        
+      </div>
+      }
+      @if(isEditMode){
+        <div class="row">
+        <mat-form-field class="column" [appearance]="appearance()">
+          <mat-label>Changes Effect from</mat-label>
+          <input formControlName="UpdateEffectFrom" matInput [matDatepicker]="picker123" [max]="maxDate"
+            [matDatepickerFilter]="dateFilter" (keydown)="allowManualInput($event)" [matDatepickerFilter]="dateFilter"
+            (ngModelChange)="formatDate($event)" (input)="onDateInputUUpdates($event)" placeholder="DD-MM-YYYY" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker123"></mat-datepicker-toggle>
+          <mat-datepicker #picker123></mat-datepicker>
+          <button mat-icon-button matSuffix (click)="clearDateUpdateEffectFrom()" aria-label="Clear date">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="directorForm.get('UpdateEffectFrom')?.hasError('required')">
+            changes effect date is required when you are updating the director.
+          </mat-error>
+        </mat-form-field>
+      </div>
+       }
+      <!-- [disabled]="!directorForm.valid" -->
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <button *ngIf="!ViewDirector" mat-raised-button color="primary" type="submit" style="width: 150px;"
+          >
+          Submit
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="onReset()" style="width: 150px;">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  
+</app-section>

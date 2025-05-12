@@ -1,0 +1,36 @@
+<div><h3 style="text-align: center; margin-bottom: 10px;">As on 31st March 2025</h3></div>
+<div class="table-container">
+    
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 custom-table">
+
+        <ng-container matColumnDef="HeadsOfCapital">
+            <th mat-header-cell *matHeaderCellDef>Heads Of Capital</th>
+            <td mat-cell *matCellDef="let element">{{ element.capitalType }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="EquetyShares">
+            <th mat-header-cell *matHeaderCellDef>Equety Shares</th>
+            <td mat-cell *matCellDef="let element">{{ element.number_of_shares }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ResolutionDate">
+            <th mat-header-cell *matHeaderCellDef>Resolution Date</th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.resolution_date | date:'dd-MM-yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="Total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let element">
+                {{ element.total_amount | rupees }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" (dblclick)="onRowClick(i, row)"
+            (keydown)="handleKeyDown($event, row, i)" [class.selected]="selectedRowIndex === i" tabindex="0">
+        </tr>
+
+    </table>
+    <div *ngIf="loading" class="loader-container">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+</div>
+

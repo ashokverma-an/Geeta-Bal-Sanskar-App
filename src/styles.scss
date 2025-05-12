@@ -1,0 +1,246 @@
+@use "@angular/material" as mat;
+@use "sass:map";
+
+@include mat.core();
+$palettes: (
+  "red": mat.$red-palette,
+  "green": mat.$green-palette,
+  "blue": mat.$blue-palette,
+  "yellow": mat.$yellow-palette,
+  "cyan": mat.$cyan-palette,
+  "magenta": mat.$magenta-palette,
+  "orange": mat.$orange-palette,
+  "chartreuse": mat.$chartreuse-palette,
+  "azure": mat.$azure-palette,
+  "rose": mat.$rose-palette,
+);
+
+
+
+$theme-map: ();
+
+// generates theme variables for each color and theme type combination and merges them into $theme-map
+// output: $theme-map contains mappings of theme names to color themes for each palette in both dark and light modes
+@each $theme in ("dark", "light") {
+  @each $color, $palette in $palettes {
+    $theme-name: "mat.#{$color}-#{$theme}-theme";
+    $theme-map: map.merge(
+      $theme-map,
+      (
+        $theme-name:
+          mat.define-theme(
+            (
+              color: (
+                theme-type: $theme,
+                primary: $palette,
+              ),
+            )
+          ),
+      )
+    );
+  }
+}
+
+// default theme (dark)
+$violet-dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$violet-palette,
+    ),
+    // add density only for default theme config to avoid duplicated theming styles
+    density:
+      (
+        scale: -1,
+      ),
+  )
+);
+
+// default light theme
+$violet-light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$violet-palette,
+    ),
+  )
+);
+
+@mixin themable-styles($theme) {
+  .tonal {
+    background-color: mat.get-theme-color($theme, secondary-container);
+    color: mat.get-theme-color($theme, on-secondary-container);
+  }
+
+  .filled-table {
+    --mat-table-row-item-outline-color: mat.get-theme-color($theme, on-secondary-container);
+    background-color: mat.get-theme-color($theme, secondary-container);
+    color: mat.get-theme-color($theme, on-secondary-container);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: mat.get-theme-color($theme, secondary-container) transparent;
+  }
+
+  // Button color variants
+  .secondary-button {
+    @include mat.button-color($theme, $color-variant: secondary);
+  }
+
+  .tertiary-button {
+    @include mat.button-color($theme, $color-variant: tertiary);
+  }
+
+  .warn-button {
+    @include mat.button-color($theme, $color-variant: error);
+  }
+
+  // Icon color variants
+  .primary-icon {
+    @include mat.icon-color($theme, $color-variant: primary);
+  }
+
+  .secondary-icon {
+    @include mat.icon-color($theme, $color-variant: secondary);
+  }
+
+  .tertiary-icon {
+    @include mat.icon-color($theme, $color-variant: tertiary);
+  }
+
+  .warn-icon {
+    @include mat.icon-color($theme, $color-variant: error);
+  }
+}
+
+html {
+  @include mat.all-component-themes($violet-dark-theme);
+
+  &.violet-dark {
+    @include themable-styles($violet-dark-theme);
+  }
+
+  &.violet-light {
+    @include mat.all-component-colors($violet-light-theme);
+    @include themable-styles($violet-light-theme);
+  }
+
+  @each $color, $palette in $palettes {
+    &.#{$color}-dark {
+      @include mat.all-component-colors(map.get($theme-map, "mat.#{$color}-dark-theme"));
+     
+      @include themable-styles(map.get($theme-map, "mat.#{$color}-dark-theme"));
+    }
+
+    &.#{$color}-light {
+      @include mat.all-component-colors(map.get($theme-map, "mat.#{$color}-light-theme"));
+      @include themable-styles(map.get($theme-map, "mat.#{$color}-light-theme"));
+    }
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.sidebar-link {
+  --mdc-list-list-item-container-shape: 9999px;
+}
+
+.flex-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.sections-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+mat-form-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+
+html{
+  --mat-form-field-container-height:42px !important;
+  }
+  .mat-mdc-form-field-infix {
+    padding: 7px 0 !important;
+    min-height: 42px !important;
+  }
+  
+  .mat-mdc-notch-piece.mdc-notched-outline__notch {
+    line-height: 0 !important;
+  }
+
+  .container {
+    background: white;
+    margin: 30px 40px;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 3px 3px 20px #00000014;
+}
+
+
+.container {
+    background: white;
+    margin: 30px 40px;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 3px 3px 20px #00000014;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined {
+  border: none !important;
+  box-shadow: none !important;
+  background: #fafafa;
+  border-radius: 10px;
+}
+
+.mat-mdc-form-field-flex {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.signup-card {
+  border-radius: 26px !important;
+}
+
+rect {
+  COLOR: #a44eb6;
+}
+
+.signup-container,.login-container {
+  background: linear-gradient(90deg, rgba(74,144,226,1) 0%, rgba(164,78,182,1) 64%);
+}
+
+button.full-width.mdc-button.mdc-button--raised.mat-mdc-raised-button.mat-primary.mat-mdc-button-base span.mat-ripple.mat-mdc-button-ripple {
+  background: rgb(74,144,226);
+  background: linear-gradient(90deg, rgba(74,144,226,1) 0%, rgba(164,78,182,1) 64%);
+  color: white !important;
+}
+
+button.full-width.mdc-button.mdc-button--raised.mat-mdc-raised-button.mat-primary.mat-mdc-button-base span.mdc-button__label {
+  color: white;
+}
+
+button.full-width.mdc-button.mdc-button--raised.mat-mdc-raised-button.mat-primary.mat-mdc-button-base {
+  max-width: 240px;
+}
+
+
+@import "../public/assets/styles/google-font.css";
+@import "../public/assets/styles/material-icon.css";

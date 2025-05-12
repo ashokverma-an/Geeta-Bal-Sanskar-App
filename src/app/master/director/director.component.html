@@ -1,0 +1,146 @@
+<app-section title="Director Master">
+  <div class="button-container">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="navigateToDocument('Director')"
+      style="margin-right: 10px"
+    >
+      Generate Documents
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="navigateTo()"
+      style="margin-right: 10px"
+    >
+      New Director
+    </button>
+    <button mat-flat-button class="secondary-button" (click)="generateLog()">
+      Generate Log
+    </button>
+  </div>
+  <div style="margin-top: 20px">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Search..."
+        #input
+      />
+    </mat-form-field>
+
+    @if(formDataArray.length > 0) {
+    <div style="max-height: 100%; overflow-x: auto" class="table-container">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8 custom-table"
+      >
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dinNo">
+          <th mat-header-cell *matHeaderCellDef>DIN No.</th>
+          <td mat-cell *matCellDef="let element">{{ element.dinNO }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>DirectorvName</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.firstName }}
+            {{ element.MiddleName ? element.MiddleName + " " : ""
+            }}{{ element.LastName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fatherName">
+          <th mat-header-cell *matHeaderCellDef>Father Name</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.ffirstName }}
+            {{ element.fMiddleName ? element.fMiddleName + " " : ""
+            }}{{ element.fLastName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="age">
+          <th mat-header-cell *matHeaderCellDef>Age</th>
+          <td mat-cell *matCellDef="let element">{{ getAge(element.dob) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef>Gender</th>
+          <td mat-cell *matCellDef="let element">{{ element.gender }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dob">
+          <th mat-header-cell *matHeaderCellDef>Date of Birth</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.dob | date : "dd-MM-yyyy" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pancard">
+          <th mat-header-cell *matHeaderCellDef>PAN Card</th>
+          <td mat-cell *matCellDef="let element">{{ element.pancard }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="occupation">
+          <th mat-header-cell *matHeaderCellDef>Occupation</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.occupationtype }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nationality">
+          <th mat-header-cell *matHeaderCellDef>Nationality</th>
+          <td mat-cell *matCellDef="let element">{{ element.nationality }}</td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon class="action-icon" (click)="viewRow(element.directorId)"
+              >visibility</mat-icon
+            >
+            <mat-icon class="action-icon" (click)="editRow(element)"
+              >edit</mat-icon
+            >
+            <mat-icon
+              class="action-icon"
+              (click)="deleteRow(element.directorId)"
+              >delete</mat-icon
+            >
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns; let i = index"
+          (click)="onRowClick(i, row)"
+          (keydown)="handleKeyDown($event, row, i)"
+          [class.selected]="selectedRowIndex === i"
+          tabindex="0"
+        ></tr>
+      </table>
+    
+    </div>
+    <!-- <mat-paginator
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+  >
+  </mat-paginator> -->
+
+    } @else {
+    <p>No records found for directors. Please add a new director.</p>
+    }
+  </div>
+</app-section>
