@@ -11,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppComponent } from '../../app.component';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { WidthType } from 'docx';
+import { doubleDecryptAES, doubleEncryptAES } from '../../utils/crypto.utils'; // Adjust path as needed
+
 
 @Component({
   selector: 'app-login',
@@ -130,33 +132,51 @@ export class LoginComponent {
   loginForm: FormGroup;
   constructor(private router: Router, private fb: FormBuilder, private authService: AuthService, private appComp: AppComponent, private snackBar: MatSnackBar,) {
     this.loginForm = this.fb.group({
-      email: ['akshayneriya@gmail.com', [Validators.required, Validators.email]],
-      password: ['Akshay@123', [Validators.required, Validators.minLength(6)]]
+      email: ['snehasoni1234@gmail.com', [Validators.required, Validators.email]],
+      password: ['Arit@123', [Validators.required, Validators.minLength(6)]]
     });
     this.appComp.userLoggedIn = false;
   }
-  onSubmit(): void {
-     
-    this.isLoading = true;
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (response) => {
-          setTimeout(() => {
+onSubmit(): void {
+  this.isLoading = true;
+
+  if (this.loginForm.valid) {
+    this.authService.getAccess().subscribe({
+      next: (accessRes) => {
+        // Save access token in session storage
+        sessionStorage.setItem('accessToken', accessRes.token);
+
+        // Encrypt login data
+        const encryptedLoginData = doubleEncryptAES(JSON.stringify(this.loginForm.value));
+
+        // Call login API with Authorization header
+        this.authService.login({ data: encryptedLoginData }).subscribe({
+          next: (response) => {
+            setTimeout(() => {
+              debugger
+              this.isLoading = false;
+              const decrypted = JSON.parse(doubleDecryptAES(response.data));
+              localStorage.setItem('token', decrypted.token);
+              localStorage.setItem('loggedInUser', decrypted.username);
+              this.snackBar.open('Login successful!', 'Close', { duration: 3000 });
+              this.appComp.userLoggedIn = true;
+              this.router.navigate(['/company']);
+            }, 2000);
+          },
+          error: (err) => {
             this.isLoading = false;
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('loggedInUser', response.username);
-            this.snackBar.open('Login successful!', 'Close', { duration: 3000 });
-            this.appComp.userLoggedIn = true;
-            this.router.navigate(['/company']);
-          }, 2000);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.snackBar.open('Login failed: ' + err.error.error, 'Close', { duration: 3000 });
-        }
-      });
-    }
+            this.snackBar.open('Login failed: ' + err.error?.error, 'Close', { duration: 3000 });
+          }
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.snackBar.open('Access failed: ' + err.error?.error, 'Close', { duration: 3000 });
+      }
+    });
   }
+}
+
 }
 // <div class="social-login">
 // <button mat-button><mat-icon>google</mat-icon> Google</button>

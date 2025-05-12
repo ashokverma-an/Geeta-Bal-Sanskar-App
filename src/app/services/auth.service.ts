@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,15 +6,27 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/auth';
+  private apiUrl = 'http://localhost:5000/api/';
   constructor(private http: HttpClient) {}
   register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+    return this.http.post(`${this.apiUrl}/users/login`, user);
   }
 
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
-  }
+  getAccess(): Observable<any> {
+  const accessPayload = {
+    apiKey: 'FINSOVA-BBPS-KEY',
+    userName: 'Finsova',
+    password: 'Finsova@2025'
+  };
+  return this.http.post(`${this.apiUrl}auth/getAccess`, accessPayload);
+}
+ login(credentials: any): Observable<any> {
+  const token = sessionStorage.getItem('accessToken') || '';
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.post(`${this.apiUrl}users/login`, credentials, { headers });
+}
+
+
 
   changePassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/change-password`, data);
