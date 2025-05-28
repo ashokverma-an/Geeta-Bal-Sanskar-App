@@ -153,7 +153,7 @@ onSubmit(): void {
         this.authService.login({ data: encryptedLoginData }).subscribe({
           next: (response) => {
             setTimeout(() => {
-              debugger
+               
               this.isLoading = false;
               const decrypted = JSON.parse(doubleDecryptAES(response.data));
               localStorage.setItem('token', decrypted.token);
